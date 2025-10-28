@@ -23,6 +23,10 @@
 //
 // For more information, please refer to <http://unlicense.org>
 
+/// ******* Thong *********
+// Local module imports
+use super::OriginCaller;
+
 mod xcm_config;
 
 use polkadot_sdk::{staging_parachain_info as parachain_info, staging_xcm as xcm, *};
@@ -319,5 +323,28 @@ impl pallet_collator_selection::Config for Runtime {
 /// Configure the pallet template in pallets/template.
 impl pallet_parachain_template::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = pallet_parachain_template::weights::SubstrateWeight<Runtime>;
+    type WeightInfo = pallet_parachain_template::weights::SubstrateWeight<Runtime>;
+}
+
+
+
+
+/// ******* Thong *********
+// Configure utility pallet.
+impl pallet_utility::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type RuntimeCall = RuntimeCall;
+    type PalletsOrigin = OriginCaller;
+  	type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;
+}
+// Define counter max value runtime constant.
+parameter_types! {
+    pub const CounterMaxValue: u32 = 500;
+}
+
+// cho custom_pallet
+impl custom_pallet::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type CounterMaxValue = CounterMaxValue;
+	type WeightInfo = custom_pallet::weights::SubstrateWeight<Runtime>;
 }

@@ -9,6 +9,7 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 pub mod apis;
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarks;
+
 pub mod configs;
 mod genesis_config_presets;
 mod weights;
@@ -170,7 +171,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: alloc::borrow::Cow::Borrowed("parachain-template-runtime"),
 	impl_name: alloc::borrow::Cow::Borrowed("parachain-template-runtime"),
 	authoring_version: 1,
-	spec_version: 1,
+	spec_version: 2, // <-- increment this (was 1)
 	impl_version: 0,
 	apis: apis::RUNTIME_API_VERSIONS,
 	transaction_version: 1,
@@ -313,6 +314,13 @@ mod runtime {
 	// Template
 	#[runtime::pallet_index(50)]
 	pub type TemplatePallet = pallet_parachain_template;
+
+	// ****** Thong ******
+	#[runtime::pallet_index(51)]
+    pub type Utility = pallet_utility;
+
+    #[runtime::pallet_index(52)]
+    pub type CustomPallet = custom_pallet;
 }
 
 #[docify::export(register_validate_block)]
