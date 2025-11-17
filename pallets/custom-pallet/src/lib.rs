@@ -40,6 +40,7 @@ pub mod pallet {
     #[pallet::generate_deposit(pub(super) fn deposit_event)]
     pub enum Event<T: Config> {
         CounterValueSet { counter_value: u32 },
+        TestValue2Set { test_value2: u32, who: T::AccountId, },
         CounterIncremented { counter_value: u32, who: T::AccountId, incremented_amount: u32 },
         CounterDecremented { counter_value: u32, who: T::AccountId, decremented_amount: u32 },
     }
@@ -48,6 +49,9 @@ pub mod pallet {
      /// Storage for the current value of the counter.
     #[pallet::storage]
     pub type CounterValue<T> = StorageValue<_, u32>;
+
+    #[pallet::storage]
+    pub type TestValue2<T> = StorageValue<_, u32>;
 
     /// Storage map to track the number of interactions performed by each account.
     #[pallet::storage]
@@ -175,5 +179,31 @@ pub mod pallet {
             Self::deposit_event(Event::CounterValueSet { counter_value: 0 });
             Ok(())
         }
+
+        #[pallet::call_index(4)]
+        #[pallet::weight(0)]
+		// #[pallet::weight(T::WeightInfo::add_number())]
+		pub fn add_number(origin: OriginFor<T>, something: u32) -> DispatchResult {
+			// Check that the extrinsic was signed and get the signer.
+			// This function will return an error if the extrinsic is not signed.
+			// <https://paritytech.github.io/polkadot-sdk/master/polkadot_sdk_docs/reference_docs/frame_origin/index.html>
+			let who = ensure_signed(origin)?;
+
+			let current_value: u32 = TestValue2::<T>::get().unwrap_or_default();
+
+			let new_value:u32 = current_value + something;
+
+			// Update storage.
+			<TestValue2<T>>::put(new_value);
+
+			// Emit an event.
+			Self::deposit_event(Event::TestValue2Set {  
+                test_value2: something,
+                who
+            });
+
+			// Return a successful [`DispatchResultWithPostInfo`] or [`DispatchResult`].
+			Ok(())
+		}
     }
 }

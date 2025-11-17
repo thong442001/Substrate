@@ -68,7 +68,7 @@ mod benchmarking;
 // <https://paritytech.github.io/polkadot-sdk/master/frame_support/pallet_macros/index.html>
 #[frame::pallet]
 pub mod pallet {
-	use frame::prelude::*;
+	use frame::{prelude::*, token::currency};
 
 	/// Configure the pallet by specifying the parameters and types on which it depends.
 	#[pallet::config]
