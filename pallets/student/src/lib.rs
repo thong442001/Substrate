@@ -1,19 +1,34 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-/// Edit this file to define custom logic or remove it if it is not needed.
-/// Learn more about FRAME and the core library of Substrate FRAME pallets:
-/// <https://docs.substrate.io/reference/frame-pallets/>
 pub use pallet::*;
 
-#[frame_support::pallet]
-pub mod pallet {
-	use super::*;
-	use frame_support::pallet_prelude::*;
-	use frame_system::pallet_prelude::*;
+#[cfg(test)]
+mod mock;
 
+#[cfg(test)]
+mod tests;
+
+//pub mod weights;
+
+#[cfg(feature = "runtime-benchmarks")]
+mod benchmarking;
+
+#[frame::pallet]
+pub mod pallet {
+	use frame::prelude::*;
+
+	/// Configure the pallet by specifying the parameters and types on which it depends.
+	#[pallet::config]
+	pub trait Config: frame_system::Config {
+		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+		// A type representing the weights required by the dispatchables of this pallet.
+		//type WeightInfo: crate::weights::WeightInfo;
+	}
+
+	// Định nghĩa struct Student
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Default, Debug)]
 	pub struct Student {
-		name: [u8; 32],
+		name: [u8; 4],
 		age: u16,
 		grade: u8,
 	}
@@ -21,30 +36,25 @@ pub mod pallet {
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
 
-	/// Configure the pallet by specifying the parameters and types on which it depends.
-	#[pallet::config]
-	pub trait Config: frame_system::Config {
-		/// Because this pallet emits events, it depends on the runtime's definition of an event.
-		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
-	}
-
 	#[pallet::storage]
 	#[pallet::getter(fn map_person_slice)]
-	pub type Students<T: Config> = StorageMap<_, Blake2_128, T::AccountId, Student, ValueQuery>;
+	pub type Students<T: Config> = StorageMap<_, Blake2_128, T::AccountId, Student, OptionQuery>;
 
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
+		// thong bao khi tao hoac cap nhat sinh vien
 		CreatedStudent { account: T::AccountId },
 		UpdatedStudent { account: T::AccountId },
 	}
 
-	// Errors inform users that something went wrong.
 	#[pallet::error]
 	pub enum Error<T> {
+		// Error khi sinh vien da ton tai
 		StudentExisted,
 		NotFoundStudent,
 	}
+
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
@@ -52,21 +62,23 @@ pub mod pallet {
 		#[pallet::weight(10_000)]
 		pub fn create_student(
 			origin: OriginFor<T>,
-			name: [u8; 32],
+			name: [u8; 4],
 			age: u16,
 			grade: u8,
 		) -> DispatchResult {
-			let student = ensure_signed(origin)?;
+			let who = ensure_signed(origin)?;
 
-			// TODO
-			// check student is existed (return StudentExisted) or not
-			// Each student can only create information once
+			// Kiểm tra sinh viên đã tồn tại chưa
+			ensure!(!Students::<T>::contains_key(&who), Error::<T>::StudentExisted);
 
-			// TODO
-			// Define new student
-			// Update on chain storage
+			// Tạo sinh viên mới
+			let student = Student { name, age, grade };
 
-			Self::deposit_event(Event::CreatedStudent { account: student });
+			// Lưu vào storage
+			Students::<T>::insert(&who, student);
+
+			// Emit event
+			Self::deposit_event(Event::CreatedStudent { account: who });
 
 			Ok(())
 		}
@@ -74,21 +86,19 @@ pub mod pallet {
 		#[pallet::call_index(1)]
 		#[pallet::weight(10_000)]
 		pub fn update_student(origin: OriginFor<T>, age: u16, grade: u8) -> DispatchResult {
-			let student = ensure_signed(origin)?;
+			let who = ensure_signed(origin)?;
 
-			// TODO
-			// check student is existing or not (return NotFoundStudent)
+			Students::<T>::try_mutate(&who, |maybe_student| -> DispatchResult {
+				let student = maybe_student.as_mut().ok_or(Error::<T>::NotFoundStudent)?;
 
-			// TODO
-			// Get student info
+				student.age = age;
+				student.grade = grade;
 
-			// TODO
-			// Mutate student info
+				Ok(())
+			})?;
 
-			// TODO
-			// Update modified info to onchain storage
+			Self::deposit_event(Event::UpdatedStudent { account: who });
 
-			Self::deposit_event(Event::UpdatedStudent { account: student });
 			Ok(())
 		}
 	}

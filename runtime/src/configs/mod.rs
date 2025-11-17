@@ -352,5 +352,5 @@ impl custom_pallet::Config for Runtime {
 // cho student_pallet
 impl student_pallet::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = student_pallet::weights::SubstrateWeight<Runtime>;
+	//type WeightInfo = student_pallet::weights::SubstrateWeight<Runtime>;
 }

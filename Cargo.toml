@@ -9,9 +9,10 @@ edition = "2021"
 default-members = ["pallets/template", "runtime"]
 members = [
     "node", 
-    "pallets/custom-pallet",
+    "pallets/custom-pallet", 
     "pallets/template",
     "runtime",
+    "pallets/student",
 ]
 resolver = "2"
 
@@ -35,6 +36,12 @@ serde_json = { version = "1.0.132", default-features = false }
 smallvec = { version = "1.11.0", default-features = false }
 substrate-wasm-builder = { version = "26.0.1", default-features = false }
 frame = { version = "0.9.1", default-features = false, package = "polkadot-sdk-frame" }
+
+frame-support = { workspace = true, package = "polkadot-sdk-frame-support" }
+frame-system = { workspace = true, package = "polkadot-sdk-frame-system" }
+pallet-balances = { workspace = true, package = "polkadot-sdk-pallet-balances" }
+sp-core = { workspace = true, package = "polkadot-sdk-sp-core" }
+sp-std = { workspace = true, package = "polkadot-sdk-sp-std" }
 
 [profile.release]
 opt-level = 3
