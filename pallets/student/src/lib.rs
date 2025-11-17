@@ -1,5 +1,4 @@
 #![cfg_attr(not(feature = "std"), no_std)]
-#![cfg(test)]  // ← Bắt buộc để thấy mock.rs và tests.rs
 
 pub use pallet::*;
 
@@ -11,6 +10,7 @@ mod tests;
 
 #[frame::pallet]
 pub mod pallet {
+    use super::*;
     use frame::prelude::*;
 
     #[pallet::config]
