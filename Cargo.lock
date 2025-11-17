@@ -10030,6 +10030,7 @@ dependencies = [
  "scale-info",
  "serde_json",
  "smallvec",
+ "student-pallet",
  "substrate-wasm-builder",
 ]
 
@@ -17185,6 +17186,15 @@ dependencies = [
  "quote",
  "rustversion",
  "syn 2.0.101",
+]
+
+[[package]]
+name = "student-pallet"
+version = "0.1.0"
+dependencies = [
+ "parity-scale-codec",
+ "polkadot-sdk-frame",
+ "scale-info",
 ]
 
 [[package]]

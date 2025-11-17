@@ -321,6 +321,11 @@ mod runtime {
 
     #[runtime::pallet_index(52)]
     pub type CustomPallet = custom_pallet;
+
+	#[runtime::pallet_index(53)]
+    pub type StudentPallet = student_pallet;
+
+
 }
 
 #[docify::export(register_validate_block)]
