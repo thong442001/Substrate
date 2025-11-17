@@ -39,9 +39,9 @@ frame = { version = "0.9.1", default-features = false, package = "polkadot-sdk-f
 
 frame-support = { workspace = true, package = "polkadot-sdk-frame-support" }
 frame-system = { workspace = true, package = "polkadot-sdk-frame-system" }
-pallet-balances = { workspace = true, package = "polkadot-sdk-pallet-balances" }
 sp-core = { workspace = true, package = "polkadot-sdk-sp-core" }
 sp-std = { workspace = true, package = "polkadot-sdk-sp-std" }
+pallet-balances = { workspace = true, package = "polkadot-sdk-pallet-balances" }
 
 [profile.release]
 opt-level = 3

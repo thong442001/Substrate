@@ -11,26 +11,8 @@ edition.workspace = true
 codec = { features = ["derive"], workspace = true }
 scale-info = { features = ["derive"], workspace = true }
 frame = { features = ["experimental", "runtime"], workspace = true }
-frame-support = { workspace = true, package = "polkadot-sdk-frame-support", default-features = false, features = ["std"] }
-frame-system = { workspace = true, package = "polkadot-sdk-frame-system", default-features = false, features = ["std"] }
-sp-core = { workspace = true, package = "polkadot-sdk-sp-core" }
-sp-std = { workspace = true, package = "polkadot-sdk-sp-std" }
-pallet-balances = { workspace = true, package = "polkadot-sdk-pallet-balances" }
 
 [features]
 default = ["std"]
-std = [
-    "codec/std",
-    "frame/std",
-    "scale-info/std",
-    "frame-support/std",
-    "frame-system/std",
-    "sp-core/std",
-    "sp-std/std",
-    "pallet-balances/std",
-]
-runtime-benchmarks = [
-    "frame/runtime-benchmarks",
-    "frame-support/runtime-benchmarks",
-    "frame-system/runtime-benchmarks",
-]
+std = ["codec/std", "frame/std", "scale-info/std"]
+runtime-benchmarks = ["frame/runtime-benchmarks"]
