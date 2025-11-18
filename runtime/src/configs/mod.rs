@@ -354,3 +354,9 @@ impl student_pallet::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
 	//type WeightInfo = student_pallet::weights::SubstrateWeight<Runtime>;
 }
+
+// cho kitties_pallet
+impl kitties_pallet::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+	//type WeightInfo = student_pallet::weights::SubstrateWeight<Runtime>;
+}

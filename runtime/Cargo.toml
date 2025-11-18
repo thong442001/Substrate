@@ -29,6 +29,7 @@ serde_json = { workspace = true, default-features = false, features = ["alloc"] 
 smallvec = { workspace = true, default-features = true }
 custom-pallet = { path = "../pallets/custom-pallet", default-features = false }
 student-pallet = { path = "../pallets/student", default-features = false }
+kitties-pallet = { path = "../pallets/kitties", default-features = false }
 
 [features]
 default = ["std"]
@@ -42,7 +43,8 @@ std = [
 	"serde_json/std",
 	"substrate-wasm-builder",
 	"custom-pallet/std",
-	"student-pallet/std"
+	"student-pallet/std",
+	"kitties-pallet/std"
 ]
 
 runtime-benchmarks = [

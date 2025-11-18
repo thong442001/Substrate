@@ -13,6 +13,7 @@ members = [
     "pallets/template",
     "runtime",
     "pallets/student",
+    "pallets/kitties",
 ]
 resolver = "2"
 

@@ -325,6 +325,9 @@ mod runtime {
 	#[runtime::pallet_index(53)]
     pub type StudentPallet = student_pallet;
 
+	#[runtime::pallet_index(54)]
+    pub type KittiesPallet = kitties_pallet;
+
 
 }
 

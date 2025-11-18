@@ -6346,6 +6346,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c33070833c9ee02266356de0c43f723152bd38bd96ddf52c82b3af10c9138b28"
 
 [[package]]
+name = "kitties-pallet"
+version = "0.1.0"
+dependencies = [
+ "parity-scale-codec",
+ "polkadot-sdk-frame",
+ "scale-info",
+]
+
+[[package]]
 name = "kvdb"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -10023,6 +10032,7 @@ dependencies = [
  "custom-pallet",
  "docify",
  "hex-literal",
+ "kitties-pallet",
  "log",
  "pallet-parachain-template",
  "parity-scale-codec",
