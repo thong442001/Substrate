@@ -14,9 +14,8 @@ pub mod pallet {
     use frame::prelude::*;
 
     #[pallet::pallet]
-    // Vec<u8> không có giới hạn kích thước nên không thể tự động tạo thông tin lưu trữ (MaxEncodedLen)
-	#[pallet::without_storage_info]
-	pub struct Pallet<T>(_);
+    #[pallet::without_storage_info]
+    pub struct Pallet<T>(_);
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
@@ -24,113 +23,105 @@ pub mod pallet {
     }
 
     // Define Kitties
-    #[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+    #[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo, MaxEncodedLen)]
     #[scale_info(skip_type_params(T))]
     pub struct Kitty<T: Config> {
-        pub dna: Vec<u8>,
+        pub dna: [u8;16],
         pub price: u64,
         pub gender: Gender,
         pub owner: T::AccountId,
     }
 
-    // Define Gender
     #[derive(Clone, Encode, Decode, PartialEq, Copy, RuntimeDebug, TypeInfo, MaxEncodedLen)]
     pub enum Gender {
         Male,
         Female,
     }
 
-    // TODO : Define KittyId storage 
-	#[pallet::storage]
-	#[pallet::getter(fn kitty_id)]
-	pub(super) type KittyId<T: Config> =StorageValue<_, u32, ValueQuery>;
+    // KittyId storage
+    #[pallet::storage]
+    #[pallet::getter(fn kitty_id)]
+    pub(super) type KittyId<T: Config> = StorageValue<_, u32, ValueQuery>;
 
-	//TODO : Define Kitties storage + OptionQuery
-    // key is DNA => Vec<u8>
-    // value is Kitty<T>
-	#[pallet::storage]
-	#[pallet::getter(fn get_kitty)]
-	pub type Kitties<T: Config> = StorageMap<_, Blake2_128Concat, Vec<u8>, Kitty<T>, OptionQuery>;
+    // Kitties storage
+    #[pallet::storage]
+    #[pallet::getter(fn get_kitty)]
+    pub type Kitties<T: Config> = StorageMap<_, Blake2_128Concat, [u8;16], Kitty<T>, OptionQuery>;
 
-	//TODO : Define KittiesOwned storage + ValueQuery
-	#[pallet::storage]
-	#[pallet::getter(fn kitty_owned)]
-	pub(super) type KittiesOwned<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, Vec<Vec<u8>>, ValueQuery>;
-
+    // KittiesOwned storage: mỗi user có tối đa 100 kitty
+    #[pallet::storage]
+    #[pallet::getter(fn kitty_owned)]
+    pub(super) type KittiesOwned<T: Config> =
+        StorageMap<_, Blake2_128Concat, T::AccountId, BoundedVec<[u8;16], ConstU32<100>>, ValueQuery>;
 
     #[pallet::event]
-	#[pallet::generate_deposit(pub(super) fn deposit_event)]
-	pub enum Event<T: Config> {
-		Created { kitty: Vec<u8>, owner: T::AccountId },
+    #[pallet::generate_deposit(pub(super) fn deposit_event)]
+    pub enum Event<T: Config> {
+        Created { kitty: [u8;16], owner: T::AccountId },
+    }
 
-	}
+    #[pallet::error]
+    pub enum Error<T> {
+        DuplicateKitty,
+        OverFlow,
+        TooManyKitties,
+    }
 
-	// Errors inform users that something went wrong.
-	#[pallet::error]
-	pub enum Error<T> {
-		DuplicateKitty,
-		OverFlow,
+    #[pallet::call]
+    impl<T: Config> Pallet<T> {
+        #[pallet::call_index(0)]
+        #[pallet::weight(0)]
+        pub fn create_kitty(origin: OriginFor<T>, dna: [u8;16]) -> DispatchResult {
+            let owner = ensure_signed(origin)?;
 
-	}
-
-   #[pallet::call]
-	impl<T: Config> Pallet<T> {
-       #[pallet::call_index(0)]
-		#[pallet::weight(0)]
-		pub fn create_kitty(origin: OriginFor<T>, dna: Vec<u8>) -> DispatchResult {
-			// Make sure the caller is from a signed origin
-			let owner = ensure_signed(origin)?;
-
-			//TODO : generate gender 
+            // generate gender
             let gender = Self::gen_gender(&dna)?;
 
-			// TODO: Check if the kitty does not already exist in our storage map
-			// using ensure!
+            // check duplicate
             ensure!(
                 !Kitties::<T>::contains_key(&dna),
                 Error::<T>::DuplicateKitty
             );
-			// return DuplicateKitty if error
-            // TODO: define new kitty 
+
+            // define new kitty
             let new_kitty = Kitty::<T> {
-                dna: dna.clone(),
+                dna,
                 price: 0,
                 gender,
-                owner: owner.clone()
+                owner: owner.clone(),
             };
 
-			// TODO: Get current kitty id 
+            // get current kitty id
             let current_kitty_id = Self::kitty_id();
-			
-			// TODO: Increase kitty Id by 1 (if overflow return OverFlow)
+
+            // increase kitty id
             let new_kitty_id = current_kitty_id.checked_add(1).ok_or(Error::<T>::OverFlow)?;
 
-			// TODO: Append new kitty to KittiesOwned
-            // let mut dnas = KittiesOwned::<T>::get(&owner);
-            // dnas.push(dna.clone());
-            // KittiesOwned::<T>::insert(&owner, dnas);
-            KittiesOwned::<T>::append(&owner, dna.clone());
+            // append new kitty to KittiesOwned with bounded vec
+            KittiesOwned::<T>::try_mutate(&owner, |kitty_list| {
+                kitty_list.try_push(dna).map_err(|_| Error::<T>::TooManyKitties)
+            })?;
 
-			// TODO: Write new kitty to storage
+            // write new kitty to storage
             Kitties::<T>::insert(&dna, new_kitty);
 
-			// TODO: Write new kitty id 
+            // update kitty id
             KittyId::<T>::put(new_kitty_id);
 
-			// Deposit our "Created" event.
-			Self::deposit_event(Event::Created { kitty: dna, owner: owner.clone()});
+            // deposit event
+            Self::deposit_event(Event::Created { kitty: dna, owner: owner.clone() });
 
-			Ok(())
+            Ok(())
         }
     }
 }
 
 impl<T> Pallet<T> {
-	fn gen_gender(dna: &Vec<u8>) -> Result<Gender,Error<T>>{
-		if dna.len()%2 ==0 {
-            return Ok(Gender::Male);
-        }else {
-            return Ok(Gender::Female);
+    fn gen_gender(dna: &[u8;16]) -> Result<Gender, Error<T>> {
+        if dna.len() % 2 == 0 {
+            Ok(Gender::Male)
+        } else {
+            Ok(Gender::Female)
         }
-	}
+    }
 }

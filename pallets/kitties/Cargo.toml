@@ -11,8 +11,9 @@ edition.workspace = true
 codec = { features = ["derive"], workspace = true }
 scale-info = { features = ["derive"], workspace = true }
 frame = { features = ["experimental", "runtime"], workspace = true }
+bounded-collections = { version = "0.3.2", default-features = false }
 
 [features]
 default = ["std"]
-std = ["codec/std", "frame/std", "scale-info/std"]
+std = ["codec/std", "frame/std", "scale-info/std","bounded-collections/std"]
 runtime-benchmarks = ["frame/runtime-benchmarks"]

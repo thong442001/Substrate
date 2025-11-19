@@ -1,7 +1,7 @@
-// src/mock.rs
+
 #![cfg(test)]
 
-use crate as pallet_student;
+use crate as pallet_kitties;
 use frame::{prelude::*, runtime::prelude::*, testing_prelude::*};
 
 type Block = frame_system::mocking::MockBlock<Test>;
@@ -26,7 +26,7 @@ mod runtime {
     pub type System = frame_system;
 
     #[runtime::pallet_index(1)]
-    pub type StudentPallet = pallet_student;
+    pub type KittiesPallet = pallet_kitties;
 }
 
 #[derive_impl(frame_system::config_preludes::TestDefaultConfig)]
@@ -34,7 +34,7 @@ impl frame_system::Config for Test {
     type Block = Block;
 }
 
-impl pallet_student::Config for Test {
+impl pallet_kitties::Config for Test {
     type RuntimeEvent = RuntimeEvent;
 }
 

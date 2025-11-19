@@ -44,6 +44,8 @@ sp-core = { workspace = true, package = "polkadot-sdk-sp-core" }
 sp-std = { workspace = true, package = "polkadot-sdk-sp-std" }
 pallet-balances = { workspace = true, package = "polkadot-sdk-pallet-balances" }
 
+bounded-collections = { version = "0.3.2", default-features = false }
+
 [profile.release]
 opt-level = 3
 panic = "unwind"
