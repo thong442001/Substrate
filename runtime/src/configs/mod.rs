@@ -342,21 +342,27 @@ parameter_types! {
     pub const CounterMaxValue: u32 = 500;
 }
 
-// cho custom_pallet
+// custom_pallet
 impl custom_pallet::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
     type CounterMaxValue = CounterMaxValue;
 	type WeightInfo = custom_pallet::weights::SubstrateWeight<Runtime>;
 }
 
-// cho student_pallet
+// student_pallet
 impl student_pallet::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
 	//type WeightInfo = student_pallet::weights::SubstrateWeight<Runtime>;
 }
 
-// cho kitties_pallet
+// kitties_pallet
 impl kitties_pallet::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
 	//type WeightInfo = kitties_pallet::weights::SubstrateWeight<Runtime>;
+}
+
+// tightly-coupling_pallet
+impl tightly_coupling_pallet::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = tightly_coupling_pallet::weights::SubstrateWeight<Runtime>;
 }

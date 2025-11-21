@@ -12,7 +12,7 @@ mod tests;
 pub mod pallet {
     use super::*;
     use frame::prelude::*;
-
+    
     #[pallet::pallet]
     #[pallet::without_storage_info]
     pub struct Pallet<T>(_);
@@ -114,9 +114,8 @@ pub mod pallet {
             Ok(())
         }
     }
-}
 
-impl<T> Pallet<T> {
+    impl<T> Pallet<T> {
     fn gen_gender(dna: &[u8;16]) -> Result<Gender, Error<T>> {
         if dna.len() % 2 == 0 {
             Ok(Gender::Male)
@@ -124,4 +123,7 @@ impl<T> Pallet<T> {
             Ok(Gender::Female)
         }
     }
+    }
+
 }
+

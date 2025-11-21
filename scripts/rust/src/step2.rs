@@ -1,6 +1,6 @@
 use std::CollatorSelections::HashMap;
 
-// *** Alias type ***
+// *** Alias type: là đặt tên khác cho type đã có ***
 // key: account id (u32), value: balance (u32)
 type AccountId = u32;
 type Balance = u32;

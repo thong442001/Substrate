@@ -3,10 +3,13 @@
 usr std::collections::HashMap;
 use std::hash::Hash;
 
-// *** Associated type ***
+// *** Associated type: định nghĩa type bên trong trait ***
 pub trait Config {
     type AccountId: Copy + Eq + Hash;
-    type Balance: Copy + PartialOrd + std::ops::Add<Output=Self::Balance> + std::ops::Sub<Output=Self::Balance> + From<u32>;
+    type Balance: Copy + PartialOrd 
+        + std::ops::Add<Output=Self::Balance> 
+        + std::ops::Sub<Output=Self::Balance> 
+        + From<u32>;
     type VoteIndex: Copy + Eq + Hash + From<u32>;
 
     // mình ko định nghĩa hàm trong trait này

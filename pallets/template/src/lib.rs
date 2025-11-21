@@ -47,6 +47,7 @@
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use frame::prelude::DispatchResult;
 pub use pallet::*;
 
 #[cfg(test)]
@@ -98,6 +99,10 @@ pub mod pallet {
 	/// <https://paritytech.github.io/polkadot-sdk/master/frame_support/pallet_macros/attr.storage.html>
 	#[pallet::storage]
 	pub type Something<T: Config> = StorageValue<_, CompositeStruct<T>>;
+
+	#[pallet::storage]
+	#[pallet::getter(fn number)]
+	pub type Number<T: Config> = StorageValue<_, u32>;
 
 	/// Pallets use events to inform users when important changes are made.
 	/// <https://paritytech.github.io/polkadot-sdk/master/polkadot_sdk_docs/guides/your_first_pallet/index.html#event-and-error>
@@ -179,4 +184,13 @@ pub mod pallet {
 			}
 		}
 	}
+}
+// helper functions
+ impl<T: Config> Pallet<T> {
+    pub fn update_storage(new_value: u32) -> DispatchResult {
+       <Something<T>>::put(CompositeStruct { 
+            block_number: new_value.into() 
+        });
+        Ok(())
+    }
 }

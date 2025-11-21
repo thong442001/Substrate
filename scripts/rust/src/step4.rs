@@ -1,14 +1,17 @@
 use std::CollatorSelections::HashMap;
 
-// *** Generic type ***
+// *** Generic type: sử dụng generic type parameters ***
 pub struct BalanceModule<AccountId, Balance> {
     balances: HashMap<AccountId, Balance>,
 }
 
-// *** trait bound ***
+// *** Blanket Implementation ***
 use std::hash::Hash;
 impl <AccountId: Eq + Hash, 
-        Balance: Copy + PartialOrd + std::ops::Add<Output=Balance> + std::ops::Sub<Output=Balance> + From<u32>
+        Balance: Copy + PartialOrd 
+                    + std::ops::Add<Output=Balance> 
+                    + std::ops::Sub<Output=Balance> 
+                    + From<u32>
         > BalanceModule<AccountId, Balance> {
     pub fn new() -> Self {
         Self {
