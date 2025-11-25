@@ -28,17 +28,6 @@ pub mod pallet {
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
 
-	// #[derive(
-	// 	Encode, Decode, MaxEncodedLen, TypeInfo, CloneNoBound, PartialEqNoBound, DefaultNoBound,
-	// )]
-	// #[scale_info(skip_type_params(T))]
-	// pub struct CompositeStruct<T: Config> {
-	// 	pub(crate) block_number: BlockNumberFor<T>,
-	// }
-
-	// #[pallet::storage]
-	// pub type Something<T: Config> = StorageValue<_, CompositeStruct<T>>;
-
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
@@ -50,8 +39,6 @@ pub mod pallet {
 	pub enum Error<T> {
 	}
 
-	// #[pallet::hooks]
-	// impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {}
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
@@ -63,7 +50,9 @@ pub mod pallet {
 			let who = ensure_signed(origin)?;
 
 			// Gọi pallet template để lưu block number
-			let value_from_template = pallet_parachain_template::Pallet::<T>::number().unwrap_or_default();
+			let value_from_template = pallet_minimal_template::Something::<T>::get()
+				.map(|s| s.block_number.into().as_u32())
+				.unwrap_or_default();
 
 			// Gửi sự kiện có block number của pallet template
 			Self::deposit_event(Event::SomethingAccess { something: value_from_template, who });
@@ -78,7 +67,7 @@ pub mod pallet {
 			let who = ensure_signed(origin)?;
 
 			// update storage from pallet template	
-			pallet_parachain_template::Pallet::<T>::update_storage(something)?;
+			pallet_minimal_template::Pallet::<T>::update_storage(something)?;
 			
 			// Gửi sự kiện có block number của pallet template
 			Self::deposit_event(Event::SomethingUpdate { something: something, who });

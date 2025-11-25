@@ -90,14 +90,15 @@ pub mod pallet {
 	)]
 	#[scale_info(skip_type_params(T))]
 	pub struct CompositeStruct<T: Config> {
-		/// A block number.
-		pub(crate) block_number: BlockNumberFor<T>,
+		//pub(crate) block_number: BlockNumberFor<T>,
+		pub block_number: BlockNumberFor<T>,
 	}
 
 	/// The pallet's storage items.
 	/// <https://paritytech.github.io/polkadot-sdk/master/polkadot_sdk_docs/guides/your_first_pallet/index.html#storage>
 	/// <https://paritytech.github.io/polkadot-sdk/master/frame_support/pallet_macros/attr.storage.html>
 	#[pallet::storage]
+	#[pallet::getter(fn something)]
 	pub type Something<T: Config> = StorageValue<_, CompositeStruct<T>>;
 
 	#[pallet::storage]
@@ -186,11 +187,35 @@ pub mod pallet {
 	}
 }
 // helper functions
- impl<T: Config> Pallet<T> {
-    pub fn update_storage(new_value: u32) -> DispatchResult {
-       <Something<T>>::put(CompositeStruct { 
-            block_number: new_value.into() 
-        });
-        Ok(())
-    }
+impl<T: Config> Pallet<T> {
+
+	// Ghi storage – cập nhật block_number
+	pub fn update_storage(new_value: u32) -> DispatchResult {
+		Something::<T>::put(CompositeStruct { 
+			block_number: new_value.into() 
+		});
+		Ok(())
+	}
+}
+
+pub trait ConfigHelper {
+	fn get_something() -> Option<u32>;
+	fn set_something(new_value: u32) -> DispatchResult;
+}
+
+impl <T: Config> ConfigHelper for Pallet<T> {
+	
+	// Đọc storage – trả Option<u32>
+	fn get_something() -> Option<u32> {
+		Something::<T>::get().map(|s| s.block_number.into().as_u32())
+	}
+
+	// Ghi storage – cập nhật block_number
+	fn set_something(new_value: u32) -> DispatchResult {
+		Something::<T>::put(CompositeStruct { 
+			block_number: new_value.into() 
+		});
+		Ok(())
+	}
+	
 }
