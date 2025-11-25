@@ -1,22 +1,30 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use frame::prelude::*;
-
 pub use pallet::*;
+
+#[cfg(test)]
+mod mock;
+
+#[cfg(test)]
+mod tests;
+
+pub mod weights;
+
+#[cfg(feature = "runtime-benchmarks")]
+mod benchmarking;
+
 use pallet_parachain_template::ConfigHelper;
 
 #[frame::pallet]
 pub mod pallet {
 	use super::*;
-	//use frame::{prelude::*, token::currency};
+	use frame::{prelude::*, token::currency};
 
 	#[pallet::config]
-	// Tương tác giữa các Pallets
-	// Tightly Coupling: 2 Pallet phụ thuộc lẫn nhau.
 	pub trait Config: frame_system::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+		type WeightInfo: crate::weights::WeightInfo;
 		type TemplateConfigHelper: ConfigHelper;
-
 	}
 
 	#[pallet::pallet]
@@ -38,13 +46,14 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 		
 		#[pallet::call_index(0)]
-		#[pallet::weight(10_000)]
+		#[pallet::weight(Weight::from_parts(10_000, 0) + T::DbWeight::get().writes(1))]
 		pub fn access_on_chain_pallet_template(origin: OriginFor<T>, something: u32) -> DispatchResultWithPostInfo {
 			
 			let who = ensure_signed(origin)?;
 
 			// Gọi pallet template để lưu block number
-			let value_from_template = <<T as Config>::TemplateConfigHelper>::get_something().unwrap_or_default();
+ 			let value_from_template = <<T as Config>::TemplateConfigHelper>::get_something().unwrap_or_default();
+
 
 			// Gửi sự kiện có block number của pallet template
 			Self::deposit_event(Event::SomethingAccess { something: value_from_template, who });
@@ -53,7 +62,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(1)]
-		#[pallet::weight(10_000)]
+		#[pallet::weight(Weight::from_parts(10_000, 0) + T::DbWeight::get().writes(1))]
 		pub fn update_on_chain_pallet_template(origin: OriginFor<T>, something: u32) -> DispatchResultWithPostInfo {
 			
 			let who = ensure_signed(origin)?;
@@ -68,3 +77,4 @@ pub mod pallet {
 		}
 	}
 }
+

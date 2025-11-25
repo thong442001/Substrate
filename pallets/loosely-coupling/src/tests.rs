@@ -13,7 +13,7 @@ fn access_on_chain_pallet_template_works() {
         let input_value = 42;
 
         // Gọi extrinsic đầu tiên
-        assert_ok!(TightlycouplingPallet::access_on_chain_pallet_template(
+        assert_ok!(LooselycouplingPallet::access_on_chain_pallet_template(
             RuntimeOrigin::signed(alice),
             input_value
         ));
@@ -40,7 +40,7 @@ fn update_on_chain_pallet_template_works() {
         let new_value = 999;
 
         // Gọi extrinsic update
-        assert_ok!(TightlycouplingPallet::update_on_chain_pallet_template(
+        assert_ok!(LooselycouplingPallet::update_on_chain_pallet_template(
             RuntimeOrigin::signed(alice),
             new_value
         ));

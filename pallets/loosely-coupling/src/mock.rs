@@ -1,4 +1,3 @@
-use crate as tightly_coupling_palletpallet;
 use frame::{
 	deps::{frame_support::weights::constants::RocksDbWeight, frame_system::GenesisConfig},
 	prelude::*,
@@ -26,10 +25,10 @@ mod test_runtime {
 
 	#[runtime::pallet_index(0)]
 	pub type System = frame_system;
+    
 	#[runtime::pallet_index(1)]
-	pub type TightlycouplingPallet = tightly_coupling_palletpallet;
+	pub type LooselycouplingPallet = crate;
 
-	// thêm pallet parachain-template để gọi trong tightly-coupling pallet
 	#[runtime::pallet_index(2)]
 	pub type TemplatePallet = pallet_parachain_template;
 }
@@ -47,9 +46,10 @@ impl pallet_parachain_template::Config for Test {
     type WeightInfo = ();
 }
 
-impl tightly_coupling_palletpallet::Config for Test {
+impl crate::Config for Test {
 	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = ();
+    type WeightInfo = ();
+    type TemplateConfigHelper = pallet_parachain_template::Pallet<Self>;
 }
 
 // Build genesis storage according to the mock runtime.
