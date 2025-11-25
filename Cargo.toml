@@ -15,6 +15,7 @@ members = [
     "pallets/student",
     "pallets/kitties",
     "pallets/tightly-coupling",
+    "pallets/loosely-coupling",
 ]
 resolver = "2"
 

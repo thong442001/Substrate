@@ -331,6 +331,9 @@ mod runtime {
 	#[runtime::pallet_index(55)]
     pub type TightlyCouplingPallet = tightly_coupling_pallet;
 
+	#[runtime::pallet_index(56)]
+    pub type LooselyCouplingPallet = loosely_coupling_pallet;
+
 
 }
 

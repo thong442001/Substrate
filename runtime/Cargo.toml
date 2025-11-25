@@ -31,6 +31,7 @@ custom-pallet = { path = "../pallets/custom-pallet", default-features = false }
 student-pallet = { path = "../pallets/student", default-features = false }
 kitties-pallet = { path = "../pallets/kitties", default-features = false }
 tightly-coupling-pallet = { path = "../pallets/tightly-coupling", default-features = false }
+loosely-coupling-pallet = { path = "../pallets/loosely-coupling", default-features = false }
 
 [features]
 default = ["std"]
@@ -47,6 +48,7 @@ std = [
 	"student-pallet/std",
 	"kitties-pallet/std",
 	"tightly-coupling-pallet/std",
+	"loosely-coupling-pallet/std",
 ]
 
 runtime-benchmarks = [
