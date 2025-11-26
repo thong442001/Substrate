@@ -4,6 +4,7 @@ use frame::{
 	runtime::prelude::*,
 	testing_prelude::*,
 };
+use crate::weights::WeightInfo;
 
 // Configure a mock runtime to test the pallet.
 #[frame_construct_runtime]
@@ -43,12 +44,12 @@ impl frame_system::Config for Test {
 
 impl pallet_parachain_template::Config for Test {
     type RuntimeEvent = RuntimeEvent;
-    type WeightInfo = ();
+   	type WeightInfo = pallet_parachain_template::weights::SubstrateWeight<Test>;
 }
 
 impl crate::Config for Test {
 	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = ();
+	type WeightInfo = crate::weights::SubstrateWeight<Test>;
 }
 
 // Build genesis storage according to the mock runtime.

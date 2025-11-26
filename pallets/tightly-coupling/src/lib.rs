@@ -8,10 +8,11 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
-pub mod weights;
-
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
+
+pub mod weights;
+use crate::weights::WeightInfo;
 
 #[frame::pallet]
 pub mod pallet {
@@ -22,7 +23,7 @@ pub mod pallet {
 	// Tightly Coupling: 2 Pallet phụ thuộc lẫn nhau.
 	pub trait Config: frame_system::Config + pallet_parachain_template::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
-		type WeightInfo: crate::weights::WeightInfo;
+		type WeightInfo: WeightInfo;
 	}
 
 	#[pallet::pallet]
@@ -44,7 +45,7 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 		
 		#[pallet::call_index(0)]
-		#[pallet::weight(Weight::from_parts(10_000, 0) + T::DbWeight::get().writes(1))]
+		#[pallet::weight(<T as crate::Config>::WeightInfo::access_on_chain_pallet_template())]
 		pub fn access_on_chain_pallet_template(origin: OriginFor<T>, something: u32) -> DispatchResultWithPostInfo {
 			
 			let who = ensure_signed(origin)?;
@@ -61,7 +62,7 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(1)]
-		#[pallet::weight(Weight::from_parts(10_000, 0) + T::DbWeight::get().writes(1))]
+		#[pallet::weight(<T as crate::Config>::WeightInfo::update_on_chain_pallet_template())]
 		pub fn update_on_chain_pallet_template(origin: OriginFor<T>, something: u32) -> DispatchResultWithPostInfo {
 			
 			let who = ensure_signed(origin)?;

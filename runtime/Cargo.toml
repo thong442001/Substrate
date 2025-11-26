@@ -88,6 +88,8 @@ runtime-benchmarks = [
 	"pallet-parachain-template/runtime-benchmarks",
 	"polkadot-sdk/runtime-benchmarks",
 	"custom-pallet/runtime-benchmarks",
+	"tightly-coupling-pallet/runtime-benchmarks",
+	"pallet-parachain-template/runtime-benchmarks"
 ]
 
 try-runtime = [

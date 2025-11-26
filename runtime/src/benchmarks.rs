@@ -35,4 +35,5 @@ polkadot_sdk::frame_benchmarking::define_benchmarks!(
 	[cumulus_pallet_xcmp_queue, XcmpQueue]
 	[cumulus_pallet_weight_reclaim, WeightReclaim]
     [custom_pallet, CustomPallet]
+	[tightly_coupling_pallet, TightlyCouplingPallet]
 );
