@@ -9230,6 +9230,7 @@ name = "pallet-parachain-template"
 version = "0.1.0"
 dependencies = [
  "parity-scale-codec",
+ "polkadot-sdk 2503.0.1",
  "polkadot-sdk-frame",
  "scale-info",
 ]
@@ -10096,6 +10097,7 @@ dependencies = [
  "smallvec",
  "student-pallet",
  "substrate-wasm-builder",
+ "test-pallet",
  "tightly-coupling-pallet",
 ]
 
@@ -17734,6 +17736,16 @@ name = "termtree"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f50febec83f5ee1df3015341d8bd429f2d1cc62bcba7ea2076759d315084683"
+
+[[package]]
+name = "test-pallet"
+version = "0.1.0"
+dependencies = [
+ "parity-scale-codec",
+ "polkadot-sdk 2503.0.1",
+ "polkadot-sdk-frame",
+ "scale-info",
+]
 
 [[package]]
 name = "testnet-parachains-constants"

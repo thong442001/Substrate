@@ -373,3 +373,8 @@ impl loosely_coupling_pallet::Config for Runtime {
 	type WeightInfo = loosely_coupling_pallet::weights::SubstrateWeight<Runtime>;
 	type TemplateConfigHelper = pallet_parachain_template::Pallet<Self>;
 }
+
+// test_pallet
+impl test_pallet::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+}
