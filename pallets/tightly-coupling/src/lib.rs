@@ -16,19 +16,21 @@ use crate::weights::WeightInfo;
 
 #[frame::pallet]
 pub mod pallet {
+	use super::*;
 	use frame::{prelude::*, token::currency};
+
+	#[pallet::pallet]
+	pub struct Pallet<T>(_);
 
 	#[pallet::config]
 	// Tương tác giữa các Pallets
 	// Tightly Coupling: 2 Pallet phụ thuộc lẫn nhau.
 	pub trait Config: frame_system::Config + pallet_parachain_template::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
-		type WeightInfo: WeightInfo;
+		type WeightInfo: crate::weights::WeightInfo;
 	}
 
-	#[pallet::pallet]
-	pub struct Pallet<T>(_);
-
+	
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {

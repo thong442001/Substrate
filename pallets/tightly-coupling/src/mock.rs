@@ -4,7 +4,8 @@ use frame::{
 	runtime::prelude::*,
 	testing_prelude::*,
 };
-use crate::weights::WeightInfo;
+
+use crate as tightly_coupling_pallet;
 
 // Configure a mock runtime to test the pallet.
 #[frame_construct_runtime]
@@ -27,7 +28,7 @@ mod test_runtime {
 	#[runtime::pallet_index(0)]
 	pub type System = frame_system;
 	#[runtime::pallet_index(1)]
-	pub type TightlycouplingPallet = crate;
+	pub type TightlycouplingPallet = tightly_coupling_pallet;
 
 	// thêm pallet parachain-template để gọi trong tightly-coupling pallet
 	#[runtime::pallet_index(2)]
@@ -47,9 +48,9 @@ impl pallet_parachain_template::Config for Test {
    	type WeightInfo = pallet_parachain_template::weights::SubstrateWeight<Test>;
 }
 
-impl crate::Config for Test {
+impl tightly_coupling_pallet::Config for Test {
 	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = crate::weights::SubstrateWeight<Test>;
+	type WeightInfo = tightly_coupling_pallet::weights::SubstrateWeight<Test>;
 }
 
 // Build genesis storage according to the mock runtime.
